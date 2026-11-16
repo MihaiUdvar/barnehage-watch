@@ -79,6 +79,11 @@ You need one of the two. Both have a free tier that is far more than enough.
    | `EMAIL_FROM` | `onboarding@resend.dev` |
    | `EMAIL_TO` | `freeride.mihai@gmail.com` |
 
+   **Only one recipient is possible on Resend without a verified domain.**
+   Resend rejects any recipient other than the address you signed up with
+   until you verify a domain you own under **Domains**. If you need a
+   second recipient and have no domain, use Brevo instead.
+
    If you own a domain and verify it in Resend, you can set `EMAIL_FROM` to
    an address on that domain and send to anyone.
 
@@ -97,7 +102,10 @@ You need one of the two. Both have a free tier that is far more than enough.
    | `EMAIL_PROVIDER` | `brevo` |
    | `EMAIL_API_KEY` | the key, starts with `xkeysib-` |
    | `EMAIL_FROM` | `freeride.mihai@gmail.com` (the sender you verified) |
-   | `EMAIL_TO` | `freeride.mihai@gmail.com` |
+   | `EMAIL_TO` | `freeride.mihai@gmail.com, gratiela.elena.dumitrica@gmail.com` |
+
+   Brevo can send to any address, so `EMAIL_TO` may list several recipients
+   separated by commas.
 
 Brevo may land in the Gmail spam folder the first time because the sender
 and recipient are the same Gmail address. Mark it "Not spam" once.

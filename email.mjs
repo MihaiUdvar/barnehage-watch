@@ -4,15 +4,16 @@
 //   EMAIL_PROVIDER  "resend" or "brevo"
 //   EMAIL_API_KEY   API key from the provider
 //   EMAIL_FROM      sender address the provider has verified
-//   EMAIL_TO        recipient address
+//   EMAIL_TO        recipient address, or several separated by commas
 
 export async function sendEmail({ subject, text, html }) {
   const provider = (process.env.EMAIL_PROVIDER || "").trim().toLowerCase();
   const apiKey = process.env.EMAIL_API_KEY;
   const from = process.env.EMAIL_FROM;
-  const to = process.env.EMAIL_TO;
+  // EMAIL_TO may hold several addresses separated by commas.
+  const to = (process.env.EMAIL_TO || "").split(",").map((s) => s.trim()).filter(Boolean);
 
-  const required = { EMAIL_PROVIDER: provider, EMAIL_API_KEY: apiKey, EMAIL_FROM: from, EMAIL_TO: to };
+  const required = { EMAIL_PROVIDER: provider, EMAIL_API_KEY: apiKey, EMAIL_FROM: from, EMAIL_TO: to.length ? to : "" };
   for (const [name, value] of Object.entries(required)) {
     if (!value) throw new Error(`Missing environment variable ${name}`);
   }
@@ -22,7 +23,7 @@ export async function sendEmail({ subject, text, html }) {
     res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
-      body: JSON.stringify({ from: `Barnehage-varsel <${from}>`, to: [to], subject, text, html }),
+      body: JSON.stringify({ from: `Barnehage-varsel <${from}>`, to, subject, text, html }),
     });
   } else if (provider === "brevo") {
     res = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -30,7 +31,7 @@ export async function sendEmail({ subject, text, html }) {
       headers: { "api-key": apiKey, "content-type": "application/json", accept: "application/json" },
       body: JSON.stringify({
         sender: { name: "Barnehage-varsel", email: from },
-        to: [{ email: to }],
+        to: to.map((email) => ({ email })),
         subject,
         textContent: text,
         htmlContent: html,
