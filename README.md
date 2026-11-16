@@ -1,7 +1,7 @@
 # barnehage-watch
 
 Checks [oslo.kommune.no/barnehage/ledige-barnehageplasser](https://www.oslo.kommune.no/barnehage/ledige-barnehageplasser/)
-twice a day for kindergarten places for children **under 3 år**, across all
+at 09:00 and 16:00 Oslo time for kindergarten places for children **under 3 år**, across all
 bydeler, and emails you **only when the list changes**.
 
 Runs on GitHub Actions for free. No server, no dependencies (plain Node 20+).
@@ -40,7 +40,7 @@ current list. That email also confirms the setup works.
 | `ledige_parser.mjs` | HTML parser and the "under 3" matcher |
 | `email.mjs` | Sends email through Resend or Brevo |
 | `test.mjs` | Unit tests, run with `node test.mjs` |
-| `.github/workflows/check.yml` | Schedule (06:00 and 16:00 UTC) and the commit-back step |
+| `.github/workflows/check.yml` | Schedule (09:00 and 16:00 Oslo time) and the commit-back step |
 | `state/last.json` | Last seen list, written by the workflow |
 
 ## Setup
@@ -147,6 +147,9 @@ node check.mjs --force
 - **Page layout changes.** If the kommune redesigns the page and the parser
   finds zero kindergartens, the run fails with exit code 2 instead of
   silently saving an empty list. GitHub emails you about failed runs.
-- **Changing the schedule.** Edit the `cron` line in
-  `.github/workflows/check.yml`. Times are UTC. Oslo is UTC+1 in winter and
-  UTC+2 in summer.
+- **Changing the schedule.** The workflow runs at 09:00 and 16:00 Oslo time.
+  GitHub cron only knows UTC, so the cron line lists both possible UTC hours
+  for each Oslo hour (`0 7,8,14,15 * * *`) and the "Oslo time gate" step
+  skips the runs where the Oslo clock is not 9 or 16. To change the times,
+  edit both the cron line and the two hours in that step. The skipped runs
+  take a few seconds and cost nothing.

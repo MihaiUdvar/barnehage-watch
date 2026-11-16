@@ -2,9 +2,10 @@ name: Check ledige barnehageplasser
 
 on:
   schedule:
-    # Twice a day. GitHub cron is UTC: 06:00 and 16:00 UTC
-    # = 07:00 / 17:00 Oslo time in winter, 08:00 / 18:00 in summer.
-    - cron: "0 6,16 * * *"
+    # Target: 09:00 and 16:00 Oslo time. GitHub cron is UTC only and Oslo is
+    # UTC+1 in winter / UTC+2 in summer, so both candidate UTC hours are
+    # scheduled and the "Oslo time gate" step skips the one that is wrong.
+    - cron: "0 7,8,14,15 * * *"
   workflow_dispatch:
     inputs:
       force:
@@ -23,13 +24,28 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
+      - name: Oslo time gate
+        id: gate
+        run: |
+          HOUR=$(TZ=Europe/Oslo date +%H)
+          echo "Oslo time is $(TZ=Europe/Oslo date '+%H:%M %Z')"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$HOUR" = "09" ] || [ "$HOUR" = "16" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Not a scheduled Oslo hour, skipping."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == 'true'
 
       - uses: actions/setup-node@v4
+        if: steps.gate.outputs.run == 'true'
         with:
           node-version: "22"
 
       - name: Check page and email on changes
+        if: steps.gate.outputs.run == 'true'
         env:
           EMAIL_PROVIDER: ${{ secrets.EMAIL_PROVIDER }}
           EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
@@ -44,6 +60,7 @@ jobs:
           fi
 
       - name: Commit updated state
+        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "barnehage-watch[bot]"
           git config user.email "barnehage-watch@users.noreply.github.com"
