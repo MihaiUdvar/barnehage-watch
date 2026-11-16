@@ -66,7 +66,7 @@ You need one of the two. Both have a free tier that is far more than enough.
 
 #### Option A: Resend
 
-1. Sign up at <https://resend.com> **using freeride_mihai@yahoo.com**.
+1. Sign up at <https://resend.com> **using freeride.mihai@gmail.com**.
    Without a verified domain, Resend only delivers to the address you
    signed up with. That is fine here because you are the only recipient.
 2. Go to **API Keys**, create a key with "Sending access", copy it.
@@ -77,7 +77,7 @@ You need one of the two. Both have a free tier that is far more than enough.
    | `EMAIL_PROVIDER` | `resend` |
    | `EMAIL_API_KEY` | the key, starts with `re_` |
    | `EMAIL_FROM` | `onboarding@resend.dev` |
-   | `EMAIL_TO` | `freeride_mihai@yahoo.com` |
+   | `EMAIL_TO` | `freeride.mihai@gmail.com` |
 
    If you own a domain and verify it in Resend, you can set `EMAIL_FROM` to
    an address on that domain and send to anyone.
@@ -86,7 +86,7 @@ You need one of the two. Both have a free tier that is far more than enough.
 
 1. Sign up at <https://www.brevo.com> (free plan, 300 emails per day).
 2. Go to **Senders & IP** (under your profile menu) and add
-   `freeride_mihai@yahoo.com` as a sender. Brevo emails you a confirmation
+   `freeride.mihai@gmail.com` as a sender. Brevo emails you a confirmation
    link. Click it. You can use any address you can read mail at, it does not
    need a custom domain.
 3. Go to **SMTP & API**, tab **API Keys**, generate a new key, copy it.
@@ -96,11 +96,11 @@ You need one of the two. Both have a free tier that is far more than enough.
    |--------|-------|
    | `EMAIL_PROVIDER` | `brevo` |
    | `EMAIL_API_KEY` | the key, starts with `xkeysib-` |
-   | `EMAIL_FROM` | `freeride_mihai@yahoo.com` (the sender you verified) |
-   | `EMAIL_TO` | `freeride_mihai@yahoo.com` |
+   | `EMAIL_FROM` | `freeride.mihai@gmail.com` (the sender you verified) |
+   | `EMAIL_TO` | `freeride.mihai@gmail.com` |
 
-Brevo may land in the Yahoo spam folder the first time because the sender
-and recipient are the same Yahoo address. Mark it "Not spam" once.
+Brevo may land in the Gmail spam folder the first time because the sender
+and recipient are the same Gmail address. Mark it "Not spam" once.
 
 ### 3. Add the four secrets to GitHub
 
@@ -130,7 +130,7 @@ node check.mjs --dry-run --no-save
 To really send from your machine, set the four variables first:
 
 ```powershell
-$env:EMAIL_PROVIDER="resend"; $env:EMAIL_API_KEY="re_..."; $env:EMAIL_FROM="onboarding@resend.dev"; $env:EMAIL_TO="freeride_mihai@yahoo.com"
+$env:EMAIL_PROVIDER="resend"; $env:EMAIL_API_KEY="re_..."; $env:EMAIL_FROM="onboarding@resend.dev"; $env:EMAIL_TO="freeride.mihai@gmail.com"
 node check.mjs --force
 ```
 
