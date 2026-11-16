@@ -1,0 +1,13 @@
+{
+  "name": "barnehage-watch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Watches oslo.kommune.no for kindergarten places for children under 3 and emails when the list changes",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "check": "node check.mjs",
+    "check:dry": "node check.mjs --dry-run",
+    "test": "node test.mjs"
+  }
+}

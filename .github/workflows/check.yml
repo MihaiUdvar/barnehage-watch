@@ -1,0 +1,56 @@
+name: Check ledige barnehageplasser
+
+on:
+  schedule:
+    # Twice a day. GitHub cron is UTC: 06:00 and 16:00 UTC
+    # = 07:00 / 17:00 Oslo time in winter, 08:00 / 18:00 in summer.
+    - cron: "0 6,16 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Send the email even if nothing changed"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: barnehage-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check page and email on changes
+        env:
+          EMAIL_PROVIDER: ${{ secrets.EMAIL_PROVIDER }}
+          EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          if [ "$FORCE" = "true" ]; then
+            node check.mjs --force
+          else
+            node check.mjs
+          fi
+
+      - name: Commit updated state
+        run: |
+          git config user.name "barnehage-watch[bot]"
+          git config user.email "barnehage-watch@users.noreply.github.com"
+          git add state/last.json
+          if git diff --cached --quiet; then
+            echo "State unchanged, nothing to commit."
+          else
+            git commit -m "Update state $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
