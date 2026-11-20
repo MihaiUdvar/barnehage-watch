@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-16T20:53:56.545Z",
+  "checked_at": "2026-11-20T15:53:40.435Z",
   "source": "https://www.oslo.kommune.no/barnehage/ledige-barnehageplasser/",
   "hits": [
     {
@@ -11,17 +11,10 @@
     },
     {
       "bydel": "Frogner",
-      "updated": "26. oktober 2026",
+      "updated": "18. november 2026",
       "url": "https://www.oslo.kommune.no/barnehage/finn-barnehage-i-oslo/rosenborg-barnehage",
       "name": "Rosenborg barnehage",
       "text": "Rosenborg barnehage: 2 plasser ledig for barn 3-6 år (evt barn født 2024), ledig i oktober/november"
-    },
-    {
-      "bydel": "Frogner",
-      "updated": "26. oktober 2026",
-      "url": "https://www.oslo.kommune.no/barnehage/finn-barnehage-i-oslo/treklang-montessoribarnehage",
-      "name": "Treklang barnehage",
-      "text": "Treklang barnehage: 1 plass for barn 3–6 år, og 1 plass for barn født 2024, ledig fra september"
     },
     {
       "bydel": "Grorud",
